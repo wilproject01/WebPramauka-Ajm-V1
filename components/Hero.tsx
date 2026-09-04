@@ -1,16 +1,15 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion } from "motion/react";
 import { 
   ArrowRight, 
   Compass, 
-  Shield, 
-  Users, 
-  ChevronLeft, 
-  ChevronRight,
-  Image as ImageIcon,
   Sparkles,
   Camera,
-  FolderHeart
+  Calendar,
+  MapPin,
+  ArrowUpRight,
+  Layers,
+  Images
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -20,24 +19,35 @@ import { doc, onSnapshot, collection } from "firebase/firestore";
 const DEFAULT_ACTIVITIES = [
   {
     url: "https://images.unsplash.com/photo-1526620536413-5de78833917d?q=80&w=1000&auto=format&fit=crop",
-    title: "Latihan Gabungan"
+    title: "Latihan Gabungan Pramuka",
+    date: "24 April 2026",
+    location: "Lapangan SMKN 2 Garut",
+    desc: "Latihan teknik pionering, semaphore, dan ketangkasan bersama regu."
   },
   {
     url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1000&auto=format&fit=crop",
-    title: "Perkemahan Sabtu Minggu"
+    title: "Perkemahan PERSAMI",
+    date: "08 Mei 2026",
+    location: "Buper Mandalawangi",
+    desc: "Membangun kemandirian, kedisiplinan, dan persaudaraan di alam terbuka."
   },
   {
     url: "https://images.unsplash.com/photo-1475483768296-6163e08872a1?q=80&w=1000&auto=format&fit=crop",
-    title: "Penjelajahan Alam"
+    title: "Penjelajahan Alam Bebas",
+    date: "12 Maret 2026",
+    location: "Kaki Gn. Cikuray",
+    desc: "Uji navigasi kompas dan kebersamaan rimba penjelajahan alam Garut."
   },
   {
     url: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1000&auto=format&fit=crop",
-    title: "Pelantikan Penegak"
+    title: "Pelantikan Penegak Bantara",
+    date: "19 Feb 2026",
+    location: "Aula SMKN 2 Garut",
+    desc: "Prosesi sakral pengukuhan penegak baru penerus tunas kelapa."
   }
 ];
 
 export function Hero() {
-  const [currentIndex, setCurrentIndex] = useState(0);
   const [hero, setHero] = useState({
     title: "GERAKAN PRAMUKA GUGUS DEPAN 02.095 - 02.096",
     subtitle: "Ambalan Ir. H. Juanda - Laksamana Malahayati || Wadahnya para anak kreatif untuk mengasah keterampilan, kedisiplinan, dan jiwa kepemimpinan di era modern.",
@@ -81,8 +91,19 @@ export function Hero() {
     const unsubActivities = onSnapshot(doc(db, "content", "activities"), (snapshot) => {
       if (snapshot.exists()) {
         const data = snapshot.data();
-        if (Array.isArray(data.items)) {
-          setActivities(data.items);
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          const formatted = data.items.map((item: any, idx: number) => {
+            const def = DEFAULT_ACTIVITIES[idx % DEFAULT_ACTIVITIES.length];
+            return {
+              url: item.url || (Array.isArray(item.images) && item.images[0]) || def.url,
+              images: item.images || [item.url || def.url],
+              title: item.title || def.title,
+              date: item.date || def.date,
+              location: item.location || def.location,
+              desc: item.desc || def.desc
+            };
+          });
+          setActivities(formatted);
         }
       }
     });
@@ -94,49 +115,14 @@ export function Hero() {
     };
   }, []);
 
-  const nextSlide = () => {
-    if (activities.length === 0) return;
-    setCurrentIndex((prev) => (prev + 1) % activities.length);
-  };
-
-  const prevSlide = () => {
-    if (activities.length === 0) return;
-    setCurrentIndex((prev) => (prev - 1 + activities.length) % activities.length);
-  };
-
-  useEffect(() => {
-    if (activities.length === 0) {
-      setCurrentIndex(0);
-      return;
-    }
-    if (currentIndex >= activities.length) {
-      setCurrentIndex(activities.length - 1);
-    }
-    const timer = setInterval(nextSlide, 5000);
-    return () => clearInterval(timer);
-  }, [activities.length, currentIndex]);
-
-  const totalAct = activities.length;
-  const idxCenter = totalAct > 0 ? currentIndex % totalAct : 0;
-  const idxLeft = totalAct > 0 ? (currentIndex - 1 + totalAct) % totalAct : 0;
-  const idxRight = totalAct > 0 ? (currentIndex + 1) % totalAct : 0;
-
-  const leftUrl = activities[idxLeft]?.url || "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=300&auto=format&fit=crop";
-  const leftTitle = activities[idxLeft]?.title || "Camping Momen";
-
-  const rightUrl = activities[idxRight]?.url || "https://images.unsplash.com/photo-1526620536413-5de78833917d?q=80&w=300&auto=format&fit=crop";
-  const rightTitle = activities[idxRight]?.title || "Bakti Sosial";
-
-  const centerUrl = activities[idxCenter]?.url || "https://images.unsplash.com/photo-1475483768296-6163e08872a1?q=80&w=400&auto=format&fit=crop";
-  const centerTitle = activities[idxCenter]?.title || "Album AJM 2026";
-
   return (
     <section className="relative min-h-[95vh] flex items-center justify-center pt-28 pb-12 md:pb-20 px-4 sm:px-6 overflow-hidden bg-pramuka-blue-dark">
-      {/* Immersive Ambient Glow/Decorative Lights */}
+      {/* Immersive Ambient Glow */}
       <div className="absolute top-1/4 left-1/12 w-72 h-72 rounded-full bg-blue-600/10 blur-[120px] animate-pulse-intense pointer-events-none" />
       <div className="absolute bottom-1/4 right-1/12 w-80 h-80 rounded-full bg-indigo-500/10 blur-[130px] animate-float-slow pointer-events-none" />
 
-      <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-10 lg:gap-16 items-center relative z-10">
+      <div className="max-w-6xl w-full grid lg:grid-cols-2 gap-10 lg:gap-14 items-center relative z-10">
+        {/* Left Column: Heading & Calls to Action */}
         <motion.div
           initial={{ opacity: 0, x: -30 }}
           whileInView={{ opacity: 1, x: 0 }}
@@ -159,11 +145,12 @@ export function Hero() {
                 <ArrowRight className="w-4 h-4 sm:w-6 sm:h-6 group-hover:translate-x-1.5 transition-transform" />
               </Button>
             </Link>
-            <a href="#struktur" className="w-full sm:w-auto">
-              <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-xl sm:rounded-[2rem] px-6 sm:px-10 py-5 sm:py-8 h-auto text-sm sm:text-lg font-bold border-white/10 text-white hover:border-blue-500/40 hover:bg-white/5 bg-transparent transition-all">
-                STRUKTUR KAMI
+            <Link to="/dokumentasi" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto rounded-xl sm:rounded-[2rem] px-6 sm:px-8 py-5 sm:py-8 h-auto text-sm sm:text-lg font-bold border-blue-500/30 text-blue-300 hover:border-blue-400 hover:bg-blue-500/10 bg-white/[0.03] transition-all gap-2.5">
+                <Camera className="w-4 h-4 sm:w-5 sm:h-5 text-blue-400" />
+                LIHAT DOKUMENTASI
               </Button>
-            </a>
+            </Link>
           </div>
           
           <div className="mt-10 md:mt-16 grid grid-cols-3 gap-3 xs:gap-4 md:gap-6 border-t border-white/5 pt-6 md:pt-10">
@@ -180,86 +167,105 @@ export function Hero() {
           </div>
         </motion.div>
 
+        {/* Right Column: Bento Grid Showcase (Unified Blue Theme) */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 20 }}
+          initial={{ opacity: 0, scale: 0.95, y: 20 }}
           whileInView={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          className="relative max-w-md mx-auto lg:ml-auto group animate-float-slow"
+          transition={{ duration: 0.7, delay: 0.2 }}
+          className="relative max-w-lg mx-auto lg:ml-auto w-full"
         >
-          {/* Decorative Backlighting */}
-          <div className="absolute -inset-2 rounded-[2.5rem] md:rounded-[3rem] bg-gradient-to-tr from-blue-600/20 via-indigo-600/10 to-transparent blur-2xl group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" />
+          {/* Ambient Backlighting in Deep Blue */}
+          <div className="absolute -inset-1 rounded-[2.5rem] bg-gradient-to-tr from-blue-600/25 via-blue-500/15 to-transparent blur-2xl pointer-events-none" />
 
-          {/* Album Presentation Box / Collage Stack */}
-          <div className="relative p-6 sm:p-8 glass rounded-[2.5rem] md:rounded-[3rem] border border-white/10 shadow-2xl overflow-hidden flex flex-col justify-between h-[450px] sm:h-[500px]">
-            {/* Absolute Abstract Art Lines */}
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl pointer-events-none" />
-            <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl pointer-events-none" />
-
-            {/* Collage Mockup Stack Container */}
-            <div className="relative flex-grow flex items-center justify-center my-4">
-              {/* Stack 1 (Back left, rotates counter-clockwise) */}
-              <div className="absolute w-[140px] h-[170px] bg-zinc-950/70 border border-white/10 rounded-2xl p-2 shadow-2xl -rotate-12 -translate-x-12 -translate-y-4 opacity-70 group-hover:opacity-90 group-hover:-translate-x-14 group-hover:-rotate-15 transition-all duration-500">
-                <div className="w-full h-[110px] overflow-hidden rounded-xl bg-zinc-900 border border-white/5">
-                  <img 
-                    src={leftUrl} 
-                    alt={leftTitle} 
-                    className="w-full h-full object-cover grayscale contrast-125"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="mt-2 text-[8px] uppercase tracking-widest text-white/40 font-bold text-center truncate px-1">{leftTitle}</div>
+          {/* Bento Card Container */}
+          <div className="relative bg-zinc-950/85 backdrop-blur-2xl border border-white/15 rounded-3xl p-4 sm:p-5 shadow-2xl overflow-hidden">
+            {/* Header: Title & Total Count Badge */}
+            <div className="flex items-center justify-between gap-2 pb-3.5 mb-3.5 border-b border-white/10">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2.5 w-2.5">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500" />
+                </span>
+                <span className="text-xs font-bold text-white tracking-wider uppercase flex items-center gap-1.5">
+                  <Camera className="w-3.5 h-3.5 text-blue-400" />
+                  Dokumentasi Kegiatan
+                </span>
               </div>
 
-              {/* Stack 2 (Back right, rotates clockwise) */}
-              <div className="absolute w-[140px] h-[170px] bg-zinc-950/70 border border-white/10 rounded-2xl p-2 shadow-2xl rotate-12 translate-x-12 -translate-y-2 opacity-70 group-hover:opacity-90 group-hover:translate-x-14 group-hover:rotate-15 transition-all duration-500">
-                <div className="w-full h-[110px] overflow-hidden rounded-xl bg-zinc-900 border border-white/5">
-                  <img 
-                    src={rightUrl} 
-                    alt={rightTitle} 
-                    className="w-full h-full object-cover grayscale contrast-125"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <div className="mt-2 text-[8px] uppercase tracking-widest text-white/40 font-bold text-center truncate px-1">{rightTitle}</div>
-              </div>
-
-              {/* Stack 3 (Foreground centered, fully upright and crisp) */}
-              <div className="absolute w-[180px] h-[220px] bg-slate-900/90 border-2 border-white/15 rounded-3xl p-3 shadow-2xl group-hover:scale-105 group-hover:border-blue-500/30 transition-all duration-500 z-10">
-                <div className="w-full h-[155px] overflow-hidden rounded-2xl bg-zinc-900 border border-white/5 relative">
-                  <img 
-                    src={centerUrl} 
-                    alt={centerTitle} 
-                    className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute top-2 right-2 bg-blue-600 text-white rounded-lg p-1 shadow-md">
-                    <Camera className="w-3.5 h-3.5" />
-                  </div>
-                </div>
-                <div className="mt-3 text-[10px] uppercase tracking-widest text-blue-400 font-extrabold text-center flex items-center justify-center gap-1.5">
-                  <Sparkles className="w-3 h-3 text-amber-400 animate-pulse" />
-                  <span className="truncate max-w-[130px]">{centerTitle}</span>
-                </div>
+              <div className="flex items-center gap-1.5">
+                <span className="text-[10px] font-semibold text-blue-300 bg-blue-500/15 border border-blue-500/25 px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <Images className="w-3 h-3 text-blue-400" />
+                  <span>{activities.length} Kegiatan</span>
+                </span>
               </div>
             </div>
 
-            {/* Label, Description & Dynamic Action Button */}
-            <div className="text-center relative z-10 mt-2">
-              <h3 className="font-display font-medium text-xs text-white/40 tracking-widest uppercase mb-2">
-                Dokumentasi Kegiatan
-              </h3>
-              <p className="text-white/60 text-xs sm:text-sm max-w-sm mx-auto mb-6 leading-relaxed">
-                Jelajahi album foto petualangan, kemah bakti, api unggun, dan latihan rutin yang penuh dengan kenangan juang hebat.
-              </p>
+            {/* Bento Grid 2x2 Layout */}
+            <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+              {activities.slice(0, 4).map((act, idx) => {
+                const imgCount = Array.isArray(act.images) ? act.images.length : 1;
+                return (
+                  <Link
+                    key={idx}
+                    to="/dokumentasi"
+                    className="group relative rounded-2xl overflow-hidden border border-white/10 hover:border-blue-500/40 bg-zinc-900 aspect-[4/3] sm:aspect-[4/3] shadow-md transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/15 hover:-translate-y-0.5 flex flex-col justify-end"
+                  >
+                    {/* Activity Image */}
+                    <img
+                      src={act.url}
+                      alt={act.title}
+                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+                      referrerPolicy="no-referrer"
+                    />
 
-              <Link to="/dokumentasi" className="block w-full">
-                <Button 
-                  size="lg" 
-                  className="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl py-6 tracking-wider text-xs uppercase shadow-xl shadow-blue-500/20 border border-blue-400/20 gap-2.5 transition-all h-auto active:scale-[0.98] group/btn"
+                    {/* Gradient Overlay for Text Legibility */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-transparent transition-opacity group-hover:opacity-90" />
+
+                    {/* Top Badges (Multi-photo Indicator / Location) */}
+                    <div className="absolute top-2 left-2 right-2 flex items-center justify-between gap-1 pointer-events-none">
+                      {act.location ? (
+                        <span className="text-[9px] text-white/90 bg-black/60 backdrop-blur-md px-2 py-0.5 rounded-md border border-white/10 flex items-center gap-1 font-medium truncate max-w-[110px]">
+                          <MapPin className="w-2.5 h-2.5 text-blue-400 shrink-0" />
+                          <span className="truncate">{act.location}</span>
+                        </span>
+                      ) : <span />}
+                      {imgCount > 1 && (
+                        <span className="text-[9px] text-blue-200 bg-blue-950/80 backdrop-blur-md px-1.5 py-0.5 rounded-md border border-blue-400/30 flex items-center gap-1 font-bold ml-auto shrink-0">
+                          <Images className="w-2.5 h-2.5 text-blue-300" />
+                          <span>{imgCount}</span>
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Bottom Caption */}
+                    <div className="relative z-10 p-2.5 sm:p-3 text-left">
+                      <h4 className="text-xs sm:text-sm font-bold text-white group-hover:text-blue-300 transition-colors line-clamp-1 leading-snug">
+                        {act.title}
+                      </h4>
+                      {act.date && (
+                        <div className="flex items-center gap-1 text-[9px] sm:text-[10px] text-blue-200/60 mt-1">
+                          <Calendar className="w-2.5 h-2.5 text-blue-400" />
+                          <span>{act.date}</span>
+                        </div>
+                      )}
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* Bottom Action Bar */}
+            <div className="mt-4 pt-3 border-t border-white/10 flex items-center justify-between gap-3">
+              <span className="text-[11px] text-white/50 hidden xs:inline">
+                Klik foto untuk melihat album kegiatan
+              </span>
+              <Link to="/dokumentasi" className="w-full xs:w-auto">
+                <Button
+                  size="sm"
+                  className="w-full xs:w-auto bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-xl px-4 py-2 text-xs shadow-lg shadow-blue-500/25 border border-blue-400/20 gap-1.5 transition-all cursor-pointer group"
                 >
-                  <FolderHeart className="w-4 h-4 text-white group-hover/btn:scale-110 group-hover/btn:rotate-6 transition-transform" />
-                  DOKUMENTASI KEGIATAN
-                  <Sparkles className="w-3.5 h-3.5 text-blue-200" />
+                  <span>Buka Semua Dokumentasi</span>
+                  <ArrowUpRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </Button>
               </Link>
             </div>
