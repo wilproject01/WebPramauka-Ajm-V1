@@ -26,13 +26,8 @@ export interface Activity {
   location?: string;
 }
 
-const DEFAULT_ACTIVITIES: Activity[] = [
-  {
-   
-];
 
 export function Dokumentasi() {
-  const [activities, setActivities] = useState<Activity[]>(DEFAULT_ACTIVITIES);
   const [searchQuery, setSearchQuery] = useState("");
   const [headerTitle, setHeaderTitle] = useState("Dokumentasi Kegiatan Ambalan");
   const [headerDesc, setHeaderDesc] = useState("Dokumentasi nyata jejak petualangan, pengabdian, latihan rutin, serta momen seru Ambalan Ir. H. Juanda & Laksamana Malahayati SMKN 2 Garut.");
@@ -55,7 +50,6 @@ export function Dokumentasi() {
         }
         if (Array.isArray(data.items)) {
           const formatted = data.items.map((item: any, idx: number) => {
-            const originalDefault = DEFAULT_ACTIVITIES[idx % DEFAULT_ACTIVITIES.length];
             
             // Build array of images (handling both images[] and legacy url)
             let imgs: string[] = [];
@@ -65,10 +59,7 @@ export function Dokumentasi() {
               imgs = [item.url.trim()];
             } else if (originalDefault?.images && originalDefault.images.length > 0) {
               imgs = originalDefault.images;
-            } else {
-              imgs = ["https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1000&auto=format&fit=crop"];
-            }
-
+            } 
             return {
               url: imgs[0] || item.url || originalDefault?.url,
               images: imgs,
