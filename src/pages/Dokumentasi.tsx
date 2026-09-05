@@ -27,77 +27,8 @@ export interface Activity {
 }
 
 const DEFAULT_ACTIVITIES: Activity[] = [
-  {
-    url: "https://images.unsplash.com/photo-1526620536413-5de78833917d?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1526620536413-5de78833917d?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1475483768296-6163e08872a1?q=80&w=1000&auto=format&fit=crop"
-    ],
-    title: "Latihan Gabungan Pramuka Penegak",
-    date: "24 April 2026",
-    location: "Lapangan SMKN 2 Garut",
-    desc: "Latihan gabungan kepramukaan bersama pangkalan se-Garut. Mengasah keterampilan pionering tiang bendera, morse & semaphore berantai, serta memupuk kekompakan regu. Kobarkan semangat juang tunas kelapa! ⚜️🏕️"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1510312305653-8ed496efae75?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1517824806704-9040b037703b?q=80&w=1000&auto=format&fit=crop"
-    ],
-    title: "Perkemahan Sabtu Minggu (PERSAMI)",
-    date: "08 Mei 2026",
-    location: "Bumi Perkemahan Mandalawangi",
-    desc: "Membangun kemandirian, kedisiplinan, dan rasa persaudaraan melalui kehidupan alam terbuka. Dari mendirikan tenda komando hingga memasak bekal rimba bersama kawan seperjuangan. 🌲🏕️"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1475483768296-6163e08872a1?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1475483768296-6163e08872a1?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1501555088652-021faa106b9b?q=80&w=1000&auto=format&fit=crop"
-    ],
-    title: "Penjelajahan & Survival Rimba",
-    date: "12 Maret 2026",
-    location: "Kaki Gunung Cikuray, Garut",
-    desc: "Uji fisik, navigasi darat dengan kompas bidik, serta pembuatan bivak darurat di kawasan perbukitan Garut. Penegak sejati pantang menyerah di setiap medan juang! 🧭⛰️"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1511632765486-a01980e01a18?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1526620536413-5de78833917d?q=80&w=1000&auto=format&fit=crop"
-    ],
-    title: "Pelantikan Penegak Bantara",
-    date: "19 Februari 2026",
-    location: "Aula Utama SMKN 2 Garut",
-    desc: "Prosesi sakral pelantikan anggota ambalan baru yang telah menuntaskan Syarat Kecakapan Umum (SKU) tingkat Penegak Bantara. Selamat mengabdi dan mengemban amanah keluhuran tunas kelapa! ⚜️🎖️"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1593113598332-cd288d649433?q=80&w=1000&auto=format&fit=crop"
-    ],
-    title: "Bakti Sosial & Peduli Lingkungan",
-    date: "05 Januari 2026",
-    location: "Kecamatan Garut Kota",
-    desc: "Pramuka hadir nyata di tengah denyut masyarakat. Penyaluran bantuan sembako, kerja bakti kebersihan aliran sungai, dan penanaman bibit pohon penghijauan. Cinta alam dan kasih sayang sesama manusia. 🌱🤝"
-  },
-  {
-    url: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop",
-    images: [
-      "https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?q=80&w=1000&auto=format&fit=crop",
-      "https://images.unsplash.com/photo-1519074069444-1ba4ea16e82a?q=80&w=1000&auto=format&fit=crop"
-    ],
-    title: "Malam Keakraban & Api Unggun",
-    date: "14 Desember 2025",
-    location: "Buper Cilopang Garut",
-    desc: "Di bawah gemerlap bintang dan hangatnya kobaran api unggun, kami mematri janji persaudaraan sejati. Malam renungan suci, pentas seni kreasi nusantara, dan canda tawa keluarga besar AJM. 🔥✨"
-  }
+ 
+   
 ];
 
 export function Dokumentasi() {
@@ -135,7 +66,7 @@ export function Dokumentasi() {
             } else if (originalDefault?.images && originalDefault.images.length > 0) {
               imgs = originalDefault.images;
             } else {
-              imgs = ["https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?q=80&w=1000&auto=format&fit=crop"];
+              imgs = ["https://www.image2url.com/r2/default/images/1788530398126-7adf0b8a-bf36-4c2c-b882-f24494a4e40f.jpg"];
             }
 
             return {
