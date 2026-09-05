@@ -24,67 +24,13 @@ export interface Activity {
   date?: string;
   desc?: string;
   location?: string;
-}
-
-const DEFAULT_ACTIVITIES: Activity[] = [
- 
-   
-];
 
 export function Dokumentasi() {
-  const [activities, setActivities] = useState<Activity[]>(DEFAULT_ACTIVITIES);
+  const [activities, setActivities] = useState<Activity[]>("");
   const [searchQuery, setSearchQuery] = useState("");
   const [headerTitle, setHeaderTitle] = useState("Dokumentasi Kegiatan Ambalan");
   const [headerDesc, setHeaderDesc] = useState("Dokumentasi nyata jejak petualangan, pengabdian, latihan rutin, serta momen seru Ambalan Ir. H. Juanda & Laksamana Malahayati SMKN 2 Garut.");
   
-  // Modal Carousel Slider State
-  const [selectedActivityIndex, setSelectedActivityIndex] = useState<number | null>(null);
-  const [currentSlideIndex, setCurrentSlideIndex] = useState<number>(0);
-  const [slideDirection, setSlideDirection] = useState<number>(0);
-
-  useEffect(() => {
-    // Listen to direct content updates from Firestore
-    const unsub = onSnapshot(doc(db, "content", "activities"), (snapshot) => {
-      if (snapshot.exists()) {
-        const data = snapshot.data();
-        if (data.headerTitle) {
-          setHeaderTitle(data.headerTitle);
-        }
-        if (data.headerDesc) {
-          setHeaderDesc(data.headerDesc);
-        }
-        if (Array.isArray(data.items)) {
-          const formatted = data.items.map((item: any, idx: number) => {
-            const originalDefault = DEFAULT_ACTIVITIES[idx % DEFAULT_ACTIVITIES.length];
-            
-            // Build array of images (handling both images[] and legacy url)
-            let imgs: string[] = [];
-            if (Array.isArray(item.images) && item.images.length > 0) {
-              imgs = item.images.filter((img: string) => Boolean(img && img.trim()));
-            } else if (item.url && item.url.trim()) {
-              imgs = [item.url.trim()];
-            } else if (originalDefault?.images && originalDefault.images.length > 0) {
-              imgs = originalDefault.images;
-            } else {
-              imgs = ["https://www.image2url.com/r2/default/images/1788530398126-7adf0b8a-bf36-4c2c-b882-f24494a4e40f.jpg"];
-            }
-
-            return {
-              url: imgs[0] || item.url || originalDefault?.url,
-              images: imgs,
-              title: item.title || `Kegiatan ${idx + 1}`,
-              date: item.date || originalDefault?.date || "Dokumentasi Kegiatan",
-              desc: item.desc || originalDefault?.desc || "Momen kegiatan kepramukaan Ambalan AJM SMKN 2 Garut.",
-              location: item.location || originalDefault?.location || "SMKN 2 Garut"
-            };
-          });
-          setActivities(formatted);
-        }
-      }
-    });
-
-    return () => unsub();
-  }, []);
 
   const filteredActivities = activities.filter((activity) => {
     const title = activity.title || "";
